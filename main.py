@@ -10,7 +10,9 @@ from models import InputModel
 from api import extract_structured_data
 from ocr import extract_text
 from score_engine import calculate_scores
-
+from models import InsightRequest
+from predict import predict_insights
+from insight_api import generate_insight
 app = FastAPI()
 
 #CORS
@@ -122,3 +124,9 @@ async def scan_lab_report(
 def food_news():
 
     return get_food_news()
+
+@app.post("/predict-insights")
+def predict(data: InsightRequest):
+    result = predict_insights(data)
+    insights = generate_insight(result["predictions"])
+    return insights
